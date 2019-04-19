@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 式神语音查询 前台 -->
+<!-- MAPPER根元素的namespace属性用于指定对应的接口名，并且是接口的完整名 -->
+<mapper namespace="com.liysite.mapper.OnmyojiVoiceMapper">
+
+	<resultMap type="com.liysite.beans.Onmyoji"
+		id="SelectAllResultMap">
+		<id property="voiceId" jdbcType="INTEGER" column="voice_id" />
+		<result property="shiId" jdbcType="INTEGER" column="shi_id" />
+		<result property="rareId" jdbcType="INTEGER" column="rare_id" />
+		<result property="cvId" jdbcType="INTEGER" column="cv_id" />
+		<result property="vtId" jdbcType="INTEGER" column="vt_id" />
+		<result property="shiJp" jdbcType="VARCHAR" column="shi_jp" />
+		<result property="shiZh" jdbcType="VARCHAR" column="shi_zh" />
+		<result property="shiEn" jdbcType="VARCHAR" column="shi_en" />
+		<result property="rareName" jdbcType="VARCHAR"
+			column="rare_name" />
+		<result property="cvNameZh" jdbcType="VARCHAR"
+			column="cv_name_zh" />
+		<result property="cvNameJp" jdbcType="VARCHAR"
+			column="cv_name_jp" />
+		<result property="vtType" jdbcType="VARCHAR" column="vt_type" />
+		<result property="vtAwake" jdbcType="VARCHAR" column="vt_awake" />
+		<result property="voiceJp" jdbcType="VARCHAR" column="voice_jp" />
+		<result property="voiceZh" jdbcType="VARCHAR" column="voice_zh" />
+		<result property="voiceRo" jdbcType="VARCHAR" column="voice_ro" />
+	</resultMap>
+
+	<select id="selectOnmyojiVoiceToPage"
+		parameterType="com.liysite.beans.Onmyoji"
+		resultMap="SelectAllResultMap">
+
+		SELECT V.voice_id, V.shi_id, S.rare_id,S.cv_id,
+		V.vt_id,shi_jp,shi_zh,shi_en,rare_name,cv_name_jp,
+		cv_name_zh,vt_type,vt_awake,voice_jp,voice_zh,voice_ro FROM yys_cv AS
+		C, yys_rare AS R, yys_shikigami AS S,yys_voice AS V , yys_voice_type
+		AS T WHERE V.shi_id = S.shi_id AND V.vt_id = T.vt_id AND
+		S.rare_id=R.rare_id AND C.cv_id = S.cv_id
+
+		limit #{index},8
+	</select>
+	<!-- 用于获取总页数 -->
+	<select id="pagecount" resultType="int">
+		select count(*) from yys_voice
+	</select>
+
+
+</mapper>

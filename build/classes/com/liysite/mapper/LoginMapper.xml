@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- MAPPER根元素的namespace属性用于指定对应的接口名，并且是接口的完整名 -->
+<mapper namespace="com.liysite.mapper.LoginMapper">
+  <!-- ResultMap用於指定查詢時所返回的查询结果的结构，该元素可以有多个，增删改不需要配置ResultMap  -->
+  <!-- Type属性用于指定返回结果用什么实体域封装。 -->
+  <!-- id 属性用于指定resultmap的名字，注意不能重复 -->
+  <resultMap type="com.liysite.beans.UserInfo" id="BaseResultMap">
+  <!-- id 元素用于指定主键，可以使用result元素来代替 -->
+  <!-- column 属性用于指定查询结果中的列名-->
+  <!-- jdbctype 用于指定jdbc类型 -->
+  <!-- property 用于指定实体域中的成员变量名 -->
+  <id property="userId" jdbcType="INTEGER" column="user_id"/>
+  <result property="userName" jdbcType="VARCHAR" column="user_name"/>
+  <result property="userPhone" jdbcType="VARCHAR" column="user_phone"/>
+  <result property="userPwd" jdbcType="VARCHAR" column="user_pwd"/>
+
+  </resultMap>
+  
+  <!-- 查询语句需要使用select元素
+  	id 属性需要指定对应接口中的方法名 
+  	parameterType 用于指定方法的形参类型-->
+  <select id="selectUserInfoByInfo" 
+  parameterType="com.liysite.beans.UserInfo" resultMap="BaseResultMap">
+  
+  SELECT user_phone,user_pwd
+  From user_info
+  <where>
+  <!-- where 元素用于生成where字句，
+  		if 元素用于动态生成查询条件， 
+  		test 属性指定什么情况下加入查询条件，里面涉及到的是方法形参中的成员变量。
+  		在if 元素中写的是SQL文查询条件。SQL文中的#{}是值得方法形参中的成员变量。
+  		like #{形参类型的成员变量} -->
+	  <if test="userPhone != null and userPhone != ''">
+	  AND user_phone LIKE #{userPhone}
+	  </if>
+	  <if test="userPhone != null and userPhone != 0">
+	  AND user_pwd LIKE #{userPwd}
+	  </if>
+  </where>
+  </select>
+  
+  
+</mapper>

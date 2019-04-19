@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- MAPPER根元素的namespace属性用于指定对应的接口名，并且是接口的完整名 -->
+<mapper namespace="com.liysite.mapper.OntamaTypeMapper">
+
+	<resultMap type="com.liysite.beans.OntamaType"
+		id="SelectAllResultMap">
+		<id property="ontamaTypeId" jdbcType="INTEGER"
+			column="ontama_type_id" />
+		<result property="ontamaTypeEn" jdbcType="VARCHAR"
+			column="ontama_type_en" />
+		<result property="ontamaTypeZh" jdbcType="VARCHAR"
+			column="ontama_type_zh" />
+		<result property="ontamaTypeTwoEffect" jdbcType="VARCHAR"
+			column="ontama_type_two_effect" />
+		<result property="ontamaTypeFourEffect" jdbcType="VARCHAR"
+			column="ontama_type_four_effect" />
+		<result property="ontamaTypeWeek" jdbcType="VARCHAR"
+			column="ontama_type_week" />
+		<result property="ontamaTypeWeekAll" jdbcType="VARCHAR"
+			column="ontama_type_week_all" />
+	</resultMap>
+
+	<select id="selectAllOntamaTypeWorkingDay"
+		parameterType="com.liysite.beans.OntamaType"
+		resultMap="SelectAllResultMap">
+		SELECT ontama_type_id, ontama_type_en, ontama_type_zh,
+		ontama_type_two_effect, ontama_type_four_effect,
+		ontama_type_week, ontama_type_week_all FROM yys_ontama_type
+		WHERE ontama_type_week LIKE #{week};
+	</select>
+	
+	<select id="selectAllOntamaTypeWeekend"
+		parameterType="com.liysite.beans.OntamaType"
+		resultMap="SelectAllResultMap">
+		SELECT ontama_type_id, ontama_type_en, ontama_type_zh,
+		ontama_type_two_effect, ontama_type_four_effect,
+		ontama_type_week, ontama_type_week_all FROM yys_ontama_type
+		WHERE ontama_type_week_all LIKE #{week};
+	</select>
+
+
+
+	<resultMap type="com.liysite.beans.OntamaDetail"
+		id="SelectOntamaDetailResultMap">
+		<id property="ontamaPrimeAttrnumId" jdbcType="INTEGER"
+			column="ontama_prime_attrnum_id" />
+		<result property="ontamaPrimeAttrnumInitnum" jdbcType="FLOAT"
+			column="ontama_prime_attrnum_initnum" />
+		<result property="ontamaPrimeAttrnumAddnum" jdbcType="FLOAT"
+			column="ontama_prime_attrnum_addnum" />
+
+		<result property="ontamaAttrId" jdbcType="INTEGER"
+			column="ontama_attr_id" />
+		<result property="ontamaAttrEn" jdbcType="VARCHAR"
+			column="ontama_attr_en" />
+		<result property="ontamaAttrZh" jdbcType="VARCHAR"
+			column="ontama_attr_zh" />
+
+		<result property="ontamaStarId" jdbcType="INTEGER"
+			column="ontama_star_id" />
+		<result property="ontamaStarEn" jdbcType="VARCHAR"
+			column="ontama_star_en" />
+		<result property="ontamaStarZh" jdbcType="VARCHAR"
+			column="ontama_star_zh" />
+
+	</resultMap>
+
+	<select id="selectOneOntamaDetail"
+		parameterType="com.liysite.beans.OntamaDetail"
+		resultMap="SelectOntamaDetailResultMap">
+		SELECT A.ontama_attr_id, ontama_attr_en, ontama_attr_zh,
+		P.ontama_prime_attrnum_id, ontama_prime_attrnum_initnum,
+		ontama_prime_attrnum_addnum,
+		S.ontama_star_id, ontama_star_en,
+		ontama_star_zh
+		FROM yys_ontama_attr AS A, yys_ontama_prime_attrnum AS
+		P, yys_ontama_star
+		AS S
+		WHERE A.ontama_attr_id = P.ontama_attr_id AND
+		S.ontama_star_id = P.ontama_star_id AND
+		ontama_star_en LIKE #{star} AND ontama_attr_en LIKE #{attrName};
+	</select>
+
+</mapper>

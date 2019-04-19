@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- MAPPER根元素的namespace属性用于指定对应的接口名，并且是接口的完整名 -->
+<mapper namespace="com.liysite.mapper.CapriccioMapper">
+
+	<insert id="createCapriccioByInfo"
+		parameterType="com.liysite.beans.Capriccio">
+		<selectKey resultType="java.lang.Integer" order="AFTER"
+			keyProperty="capId">
+			SELECT LAST_INSERT_ID() AS ID
+		</selectKey>
+		insert into capriccio(cap_note, cap_music, cap_link, cap_favor)
+		values(#{capNote}, #{capMusic}, #{capLink}, #{capFavor})
+	</insert>
+
+	<update id="updateCapriccioOne"
+		parameterType="com.liysite.beans.Capriccio">
+		UPDATE capriccio
+		SET cap_note = #{capNote,jdbcType=VARCHAR},
+		cap_music = #{capMusic,jdbcType=VARCHAR},
+		cap_link = #{capLink,jdbcType=VARCHAR},
+		cap_favor = #{capFavor,jdbcType=VARCHAR}
+		WHERE
+		cap_id = #{capId,jdbcType=INTEGER}
+	</update>
+
+	<resultMap type="com.liysite.beans.Capriccio"
+		id="SelectAllResultMap">
+		<!-- id 元素用于指定主键，可以使用result元素来代替 -->
+		<!-- column 属性用于指定查询结果中的列明名 -->
+		<!-- jdbctype 用于指定jdbc类型 -->
+		<!-- property 用于指定实体域中的成员变量名 -->
+		<id property="capId" jdbcType="INTEGER" column="cap_id" />
+		<result property="capNote" jdbcType="VARCHAR" column="cap_note" />
+		<result property="capMusic" jdbcType="VARCHAR"
+			column="cap_music" />
+		<result property="capLink" jdbcType="VARCHAR" column="cap_link" />
+		<result property="capFavor" jdbcType="VARCHAR"
+			column="cap_favor" />
+	</resultMap>
+
+	<select id="selectCapriccioAll"
+		parameterType="com.liysite.beans.Capriccio"
+		resultMap="SelectAllResultMap">
+
+		SELECT cap_id,cap_note,cap_music,cap_link,cap_favor
+		From
+		capriccio
+	</select>
+
+	<select id="selectCapriccioOne"
+		parameterType="com.liysite.beans.Capriccio"
+		resultMap="SelectAllResultMap">
+
+		SELECT cap_id,cap_note,cap_music,cap_link,cap_favor
+		From
+		capriccio
+		<where>
+			1 = 1
+			<!-- where 元素用于生成where字句， if 元素用于动态生成查询条件， test 属性指定什么情况下加入查询条件，里面涉及到的是方法形参中的成员变量。 
+				在if 元素中写的是SQL文查询条件。SQL文中的#{}是值得方法形参中的成员变量。 like #{形参类型的成员变量} -->
+			<if test="capid!= 0">
+				AND cap_id = #{capid}
+			</if>
+		</where>
+	</select>
+
+	<!-- 根据分页数据index 查询数据 -->
+	<select id="selectCapriccioToPage"
+		parameterType="com.liysite.beans.Capriccio"
+		resultMap="SelectAllResultMap">
+
+		SELECT cap_id,cap_note,cap_music,cap_link,cap_favor
+		From
+		capriccio
+		limit #{index},8
+	</select>
+	<!-- 用于获取总页数 -->
+	<select id="pagecount" resultType="int">
+		select count(*) from capriccio
+	</select>
+
+
+</mapper>
